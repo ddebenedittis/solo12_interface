@@ -31,11 +31,11 @@ namespace rbt_pd_cnt
 
             controller_interface::InterfaceConfiguration state_interface_configuration() const override;
 
-            CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state) override;
+            CallbackReturn on_configure(const rclcpp_lifecycle::State &) override;
 
-            CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state) override; 
+            CallbackReturn on_activate(const rclcpp_lifecycle::State &) override; 
 
-            CallbackReturn on_deactivate(const rclcpp_lifecycle::State & previous_state) override;
+            CallbackReturn on_deactivate(const rclcpp_lifecycle::State &) override;
 
             controller_interface::return_type update(
                 const rclcpp::Time & time, const rclcpp::Duration & period
@@ -52,11 +52,10 @@ namespace rbt_pd_cnt
             sensor_msgs::msg::JointState jnt_cmd_,jnt_stt_;
 
             std::vector<std::string > joint_;
-          
+            std::mutex sub_m_;
             bool first_time_;
-
+            bool use_ff_;
             //real time buffer
-            realtime_tools::RealtimeBuffer<std::shared_ptr<CmdType>> rt_command_ptr_;
 
 
     };
