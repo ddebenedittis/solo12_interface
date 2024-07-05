@@ -27,7 +27,7 @@ def generate_launch_description():
     #get controller config file
     controller_path = get_package_share_path("solo12_sim")
 
-    controller_path = os.path.join(controller_path,'config','wb_solo_control.yaml')
+    controller_path = os.path.join(controller_path,'config','base_config.yaml')
     controller_param = ParameterValue(controller_path,value_type=str)
     
     print(controller_path)
