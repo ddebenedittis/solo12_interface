@@ -108,19 +108,19 @@ namespace rbt_pd_cnt
 
         //  check if we have all resources defined in the "points" parameter
         //  also verify that we *only* have the resources defined in the "points" parameter
-        std::vector<std::reference_wrapper<LoanedCommandInterface>> ordered_interfaces_p,ordered_interfaces_v;       
-         if (
-            !controller_interface::get_ordered_interfaces(
-            command_interfaces_, joint_, hardware_interface::HW_IF_POSITION, ordered_interfaces_p) ||
-             !controller_interface::get_ordered_interfaces(
-            command_interfaces_, joint_, hardware_interface::HW_IF_VELOCITY, ordered_interfaces_v) ||
-            command_interfaces_.size() != ordered_interfaces_p.size() + ordered_interfaces_v.size())
-        {
-            RCLCPP_ERROR(
-            get_node()->get_logger(), "Expected %zu effort command interfaces, got %zu", 2*(joint_.size()),
-            ordered_interfaces_p.size()+ordered_interfaces_v.size());
-            return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::ERROR;
-        }
+        // std::vector<std::reference_wrapper<LoanedCommandInterface>> ordered_interfaces_p,ordered_interfaces_v;       
+        //  if (
+        //     !controller_interface::get_ordered_interfaces(
+        //     command_interfaces_, joint_, hardware_interface::HW_IF_POSITION, ordered_interfaces_p) ||
+        //      !controller_interface::get_ordered_interfaces(
+        //     command_interfaces_, joint_, hardware_interface::HW_IF_VELOCITY, ordered_interfaces_v) ||
+        //     command_interfaces_.size() != ordered_interfaces_p.size() + ordered_interfaces_v.size())
+        // {
+        //     RCLCPP_ERROR(
+        //     get_node()->get_logger(), "Expected %zu effort command interfaces, got %zu", 2*(joint_.size()),
+        //     ordered_interfaces_p.size()+ordered_interfaces_v.size());
+        //     return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::ERROR;
+        // }
 
         // reset command buffer if a command came through callback when controller was inactive
         RCLCPP_INFO(
