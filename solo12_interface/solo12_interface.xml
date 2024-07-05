@@ -1,0 +1,20 @@
+<library path="solo12_interface">
+    <class 
+        name="solo12_interface/SOLO12_Leg_Interface"
+        type="solo12_interface::SOLO12_Leg_Interface"
+        base_class_type="hardware_interface::SystemInterface">
+
+        <description>
+            hardware interface for solo leg
+        </description>  
+    </class>
+    <class 
+        name="solo12_interface/SOLO12_WB_Interface"
+        type="solo12_interface::SOLO12_WB_Interface"
+        base_class_type="hardware_interface::SystemInterface">
+
+        <description>
+            hardware interface for SOLO12 whole body 
+        </description>  
+    </class>
+</library>
