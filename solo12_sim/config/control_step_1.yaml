@@ -1,0 +1,39 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    rh_forward_effort_controller:
+      type: position_controllers/JointGroupPositionController
+    rf_forward_effort_controller:
+      type: position_controllers/JointGroupPositionController
+    lh_forward_effort_controller:
+      type: position_controllers/JointGroupPositionController
+    lf_forward_effort_controller:
+      type: position_controllers/JointGroupPositionController
+
+rh_forward_position_controller:
+  ros__parameters:
+    joints: 
+    - RH_KFE
+    - RH_HFE
+    - RH_HAA
+rf_forward_position_controller:
+  ros__parameters:
+    joints: 
+    - RF_KFE
+    - RF_HFE
+    - RF_HAA
+lh_forward_position_controller:
+  ros__parameters:
+    joints:
+    - LH_KFE
+    - LH_HFE
+    - LH_HAA 
+lf_forward_position_controller:
+  ros__parameters:
+    joints:
+    - LF_KFE
+    - LF_HFE
+    - LF_HAA 

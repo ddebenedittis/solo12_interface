@@ -1,0 +1,158 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000 # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    PD_control:
+      type: rbt_pd_cnt/Rbt_PD_cnt
+    SC_Planner:
+      type: SC_control/PD_FF_SC_Control
+    exp_SC_Planner:
+      type: exp_sc_control/PD_FF_SC_Control
+
+SC_Planner:
+   ros__parameters:
+      period: 0.001
+      file_homing: "/home/vince/Documents/cp/solo_ws/src/csv_to_pd_pub/csv_data_SC/init.csv"
+      file_name: "/home/vince/Documents/cp/solo_ws/src/csv_to_pd_pub/csv_data_SC/task.csv"
+      # N_init: 3000 # number of points in the homing phase
+      T_init: 3.0 # time duration of the homing phase     
+      # N: 100      # number of points in the task phase   
+      T_task: 1.0
+      Task_rep: 50
+      ILC_kp: 0.5
+      ILC_kd: 0.025
+      topic_name: "PD_control/command"
+      use_sim_time: False
+      joint:
+      - LF_HAA
+      - LF_HFE
+      - LF_KFE
+      - RF_HAA
+      - RF_HFE
+      - RF_KFE
+      - LH_HAA
+      - LH_HFE
+      - LH_KFE
+      - RH_HAA
+      - RH_HFE
+      - RH_KFE
+      solo12_urdf: /home/vince/Documents/cp/solo_ws/src/SC_control/urdf/solo.urdf
+exp_SC_Planner:
+   ros__parameters:
+      period: 0.001
+      file_homing: "/home/vince/Documents/cp/solo_ws/src/csv_to_pd_pub/csv_data_SC/init.csv"
+      file_name: "/home/vince/Documents/cp/solo_ws/src/csv_to_pd_pub/csv_data_SC/task.csv"
+      # N_init: 3000 # number of points in the homing phase
+      T_init: 3.0 # time duration of the homing phase     
+      # N: 100      # number of points in the task phase   
+      T_task: 1.0
+      Task_rep: 20
+      ILC_kp: 0.05
+      ILC_kd: 0.01
+      topic_name: "PD_control/command"
+      use_sim_time: False
+      joint:
+      - LF_HAA
+      - LF_HFE
+      - LF_KFE
+      - RF_HAA
+      - RF_HFE
+      - RF_KFE
+      - LH_HAA
+      - LH_HFE
+      - LH_KFE
+      - RH_HAA
+      - RH_HFE
+      - RH_KFE
+      solo12_urdf: /home/vince/Documents/cp/solo_ws/src/SC_control/urdf/solo.urdf
+PD_control:
+    ros__parameters:
+      joint:
+      - LF_HAA
+      - LF_HFE
+      - LF_KFE
+      - RF_HAA
+      - RF_HFE
+      - RF_KFE
+      - LH_HAA
+      - LH_HFE
+      - LH_KFE
+      - RH_HAA
+      - RH_HFE
+      - RH_KFE
+      K_d: 0.2
+      K_p: 5.0
+      #  K_d: 0.5
+      # K_p: 35.0
+      #  K_d: 0.1
+      # K_p: 40.0
+
+      init_pos:              # yG0 = 0.20
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+      # init_pos:              # yG0 = 0.20
+      #   - 0.0
+      #   - 0.719105870511449
+      #   - -1.732651307223339
+      #   - 0.0
+      #   - 0.719105870511449
+      #   - -1.732651307223339
+      #   - 0.0
+      #   - 1.013545436711889
+      #   - -1.732651307223339
+      #   - 0.0
+      #   - 1.013545436711889
+      #   - -1.732651307223339
+      # init_pos:               # yG0 = 0.225
+      #   - 0.0
+      #   - 0.628348176622106
+      #   - -1.51952073590227
+      #   - 0.0
+      #   - 0.628348176622106
+      #   - -1.51952073590227
+      #   - 0.0
+      #   - 0.891172559280167
+      #   - -1.51952073590227
+      #   - 0.0
+      #   - 0.891172559280167
+      #   - -1.51952073590227
+      # use_sim_time: True
+
+joint_state_broadcaster:
+  ros__parameters:
+    joints:
+    - LF_HAA
+    - LF_HFE
+    - LF_KFE
+    - RF_HAA
+    - RF_HFE
+    - RF_KFE
+    - LH_HAA
+    - LH_HFE
+    - LH_KFE
+    - RH_HAA
+    - RH_HFE
+    - RH_KFE
+    use_sim_time: True
+    interfaces:
+      - position
+      - velocity 
+      - effort
+  
+
+
+
+
+

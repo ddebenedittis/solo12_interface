@@ -1,0 +1,124 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    
+    wb_forward_position_controller:
+      type: position_controllers/JointGroupPositionController
+    
+    solo12_broadcast:
+      type: solo12_plot_broadcaster/SOLO12_Plot_broadcaster
+    
+    exp_SC_Planner:
+      type: sc_control_exp/PD_FF_SC_Control
+
+wb_forward_position_controller:
+  ros__parameters:
+    joints: 
+      - LF_HAA
+      - LF_HFE
+      - LF_KFE 
+      - RF_HAA
+      - RF_HFE
+      - RF_KFE
+      - LH_HAA
+      - LH_HFE
+      - LH_KFE 
+      - RH_HAA
+      - RH_HFE
+      - RH_KFE 
+    
+    
+
+wb_pid_controller:
+  ros__parameters:
+    joint: 
+      - LF_HAA
+      - LF_HFE
+      - LF_KFE 
+      - RF_KAA
+      - RF_HFE
+      - RF_KFE
+      - LH_KAA
+      - LH_HFE
+      - LH_KFE 
+      - RH_HAA
+      - RH_HFE
+      - RH_KFE 
+    interface_name: position
+    K_i: 0.0
+    K_d: 0.00001
+    K_p: 0.01
+    start_command: 
+    - 0.0
+    - 0.0 
+    - 0.0
+
+exp_SC_Planner:
+   ros__parameters:
+      period: 0.001
+      file_homing: "/home/vince/Documents/cp/solo_ws/src/csv_to_pd_pub/csv_data_SC/init.csv"
+      file_name: "/home/vince/Documents/cp/solo_ws/src/csv_to_pd_pub/csv_data_SC/task.csv"
+      # N_init: 3000 # number of points in the homing phase
+      T_init: 3.0 # time duration of the homing phase     
+      # N: 100      # number of points in the task phase   
+      T_task: 1.0
+      T_rest: 0.1
+      Task_rep: 30
+      ILC_kp: 0.5
+      ILC_kd: 0.075
+      KI: 7.5
+      topic_name: "PD_control/command"
+      use_sim_time: False
+      joint:
+      - LF_HAA
+      - LF_HFE
+      - LF_KFE
+      - RF_HAA
+      - RF_HFE
+      - RF_KFE
+      - LH_HAA
+      - LH_HFE
+      - LH_KFE
+      - RH_HAA
+      - RH_HFE
+      - RH_KFE
+      solo12_urdf: /home/vince/Documents/cp/solo_ws/src/sc_control_exp/urdf/solo.urdf
+
+PD_control:
+    ros__parameters:
+      joint:
+      - LF_HAA
+      - LF_HFE
+      - LF_KFE
+      - RF_HAA
+      - RF_HFE
+      - RF_KFE
+      - LH_HAA
+      - LH_HFE
+      - LH_KFE
+      - RH_HAA
+      - RH_HFE
+      - RH_KFE
+      K_d: 0.215
+      K_p: 500.0
+      #  K_d: 0.5
+      # K_p: 35.0
+      #  K_d: 0.1
+      # K_p: 40.0
+
+      init_pos:              # yG0 = 0.20
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0

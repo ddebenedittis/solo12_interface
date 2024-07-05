@@ -1,0 +1,39 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    rh_forward_position_controller:
+      type: position_controllers/JointGroupPositionController
+    rf_forward_position_controller:
+      type: position_controllers/JointGroupPositionController
+    lh_forward_position_controller:
+      type: position_controllers/JointGroupPositionController
+    lf_forward_position_controller:
+      type: position_controllers/JointGroupPositionController
+
+rh_forward_position_controller:
+  ros__parameters:
+    joints: 
+    - rh_lower_leg_joint
+    - rh_upper_leg_joint
+    - rh_hip_joint
+rf_forward_position_controller:
+  ros__parameters:
+    joints: 
+    - rf_lower_leg_joint
+    - rf_upper_leg_joint
+    - rf_hip_joint
+lh_forward_position_controller:
+  ros__parameters:
+    joints:
+    - lh_lower_leg_joint
+    - lh_upper_leg_joint
+    - lh_hip_joint 
+lf_forward_position_controller:
+  ros__parameters:
+    joints:
+    - lf_lower_leg_joint
+    - lf_upper_leg_joint
+    - lf_hip_joint 
