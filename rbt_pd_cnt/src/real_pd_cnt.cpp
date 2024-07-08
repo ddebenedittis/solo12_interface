@@ -64,7 +64,6 @@ namespace rbt_pd_cnt
         //jnt_pos_stt_.resize(init_pos_.size());
         std::vector<double> zeros(init_pos_.size(),0.0);
         jnt_cmd_.set__position(init_pos_);
-
         jnt_cmd_.set__velocity(zeros);
         jnt_cmd_.set__effort(zeros);
         
@@ -146,16 +145,9 @@ namespace rbt_pd_cnt
         //     jnt_cmd_.set__effort(zeros);
         // set effort according to PD policy 
         std::lock_guard<std::mutex> l_g(sub_m_);
-        for(uint i = 0; i < jnt_stt_.position.size(); i++)
+        for(uint i = 0; i < jnt_cmd_.position.size(); i++)
         {
-            if(first_time_)
-            {
-                RCLCPP_INFO(
-                    get_node()->get_logger(),
-                    "joint %d has value = %f and cmd = %f",i,jnt_stt_.position[i],jnt_cmd_.position[i]
-                );
-
-            }
+            
             
             command_interfaces_[3*i].set_value(jnt_cmd_.position[i]);
             command_interfaces_[3*i+1].set_value(jnt_cmd_.velocity[i]);
@@ -165,11 +157,7 @@ namespace rbt_pd_cnt
             //         "joint %d has cmd = %f",i,-jnt_cmd_.effort[i]
             //     );
         }
-        if(first_time_)
-        {
-            first_time_ = false;
-
-        }
+       
         return controller_interface::return_type::OK;
     }
 }

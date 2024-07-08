@@ -49,7 +49,7 @@ namespace rbt_pd_cnt
             
             //joint command and state variable
             std::vector<double> init_pos_;
-            sensor_msgs::msg::JointState jnt_cmd_,jnt_stt_;
+            sensor_msgs::msg::JointState jnt_cmd_;
 
             std::vector<std::string > joint_;
             std::mutex sub_m_;
