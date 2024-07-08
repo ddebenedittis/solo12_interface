@@ -10,6 +10,7 @@
 #include "hardware_interface/loaned_command_interface.hpp"
 #include "hardware_interface/loaned_state_interface.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
+#include <mutex>
 
 namespace rbt_pd_cnt
 {
@@ -18,7 +19,6 @@ namespace rbt_pd_cnt
 
     Real_PD_Cnt::Real_PD_Cnt():
     controller_interface::ControllerInterface(),
-    rt_command_ptr_(nullptr),
     jnt_cmd_sub_(nullptr)
     {
         logger_name_ = "Real_PD_Controller";
@@ -30,6 +30,7 @@ namespace rbt_pd_cnt
         try{        
             auto_declare<std::vector<std::string>>("joint", std::vector<std::string>());
             auto_declare<std::vector<double>>("init_pos",std::vector<double>());
+            auto_declare<bool>("use_feed_forward",false);
         }
         catch(const std::exception & e)
         {
@@ -43,7 +44,7 @@ namespace rbt_pd_cnt
     {
         joint_ = get_node()->get_parameter("joint").as_string_array();
         init_pos_ = get_node()->get_parameter("init_pos").as_double_array();
-
+        use_ff_ = get_node()->get_parameter("use_feed_forward").as_bool();
         if(joint_.empty())
         {
             RCLCPP_ERROR(get_node()->get_logger(),"'joint' parameter is empty");
@@ -70,7 +71,12 @@ namespace rbt_pd_cnt
         
         jnt_cmd_sub_ = get_node()->create_subscription<CmdType>(
             "~/command", rclcpp::SystemDefaultsQoS(),
-            [this](const CmdType::SharedPtr msg){rt_command_ptr_.writeFromNonRT(msg);}
+            [this](const CmdType::SharedPtr msg){
+                std::lock_guard<std::mutex> l_g(this->sub_m_);
+                this->jnt_cmd_.set__position(msg->position);
+                this->jnt_cmd_.set__velocity(msg->velocity);
+                this->jnt_cmd_.set__effort(msg->effort);
+            }
         );
 
         RCLCPP_INFO(get_node()->get_logger(),"configure succesfull");
@@ -85,6 +91,7 @@ namespace rbt_pd_cnt
         {
             command_interface_config.names.push_back(joint + "/" + hardware_interface::HW_IF_POSITION);
             command_interface_config.names.push_back(joint + "/" + hardware_interface::HW_IF_VELOCITY);
+            command_interface_config.names.push_back(joint + "/" + hardware_interface::HW_IF_EFFORT);
         }
         return command_interface_config;
     }
@@ -116,7 +123,6 @@ namespace rbt_pd_cnt
         }
 
         // reset command buffer if a command came through callback when controller was inactive
-        rt_command_ptr_.reset();
         RCLCPP_INFO(
             get_node()->get_logger(), "activation succesfull");
         return CallbackReturn::SUCCESS;
@@ -125,56 +131,21 @@ namespace rbt_pd_cnt
     CallbackReturn Real_PD_Cnt::on_deactivate(
     const rclcpp_lifecycle::State & /*previous_state*/)
     {
-    // reset command buffer
-    rt_command_ptr_.reset();
-    return CallbackReturn::SUCCESS;
+        return CallbackReturn::SUCCESS;
     }
 
     controller_interface::return_type Real_PD_Cnt::update(
         const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/
     )
     {
-        // //read joints position and velocity
-        // for(uint i = 0; i < jnt_stt_.position.size(); i++)
-        // {   
-            
-        //     jnt_stt_.position[i] = state_interfaces_[2*i].get_value();
-        //     jnt_stt_.velocity[i] = state_interfaces_[2*i +1].get_value();
-        //     std::string pp = state_interfaces_[2*i].get_name();
-        //     if(first_time_)
-        //     {
-        //         RCLCPP_INFO(
-        //             get_node()->get_logger(),
-        //             "interface %s has value = %f",pp.c_str(),jnt_stt_.position[i]
-        //         );
-
-        //     }
-        //     // RCLCPP_INFO(
-        //     //     get_node()->get_logger(),
-        //     //     "joint %d pos has name %s",i,pp.c_str()
-        //     // );
-        //     // RCLCPP_INFO(
-        //     //     get_node()->get_logger(),"Joint %d has pos %f and vel %f",i,jnt_stt_.position[i],jnt_stt_.velocity[i]
-        //     // );
-        // }
+     
         
-        auto joint_command = rt_command_ptr_.readFromRT();
-
-        if(!joint_command || !(*joint_command))
-        {
-          //  RCLCPP_INFO(get_node()->get_logger(),"steady controll");
-        }
-         else
-        {
-            jnt_cmd_.set__position((*joint_command)->position);
-            jnt_cmd_.set__velocity((*joint_command)->velocity);
-            
-            // RCLCPP_INFO(get_node()->get_logger(),"arrived new command");
-        }
+   
         // // comment if add effort command;
         //     std::vector<double> zeros(jnt_cmd_.effort.size(),0.0);
         //     jnt_cmd_.set__effort(zeros);
         // set effort according to PD policy 
+        std::lock_guard<std::mutex> l_g(sub_m_);
         for(uint i = 0; i < jnt_stt_.position.size(); i++)
         {
             if(first_time_)
@@ -186,8 +157,9 @@ namespace rbt_pd_cnt
 
             }
             
-            command_interfaces_[2*i].set_value(jnt_cmd_.position[i]);
-            command_interfaces_[2*i+1].set_value(jnt_cmd_.velocity[i]);
+            command_interfaces_[3*i].set_value(jnt_cmd_.position[i]);
+            command_interfaces_[3*i+1].set_value(jnt_cmd_.velocity[i]);
+            command_interfaces_[3*i+2].set_value(use_ff_?jnt_cmd_.effort[i]:0.0);
             // RCLCPP_INFO(
             //         get_node()->get_logger(),
             //         "joint %d has cmd = %f",i,-jnt_cmd_.effort[i]
