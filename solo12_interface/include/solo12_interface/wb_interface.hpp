@@ -17,7 +17,7 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp_lifecycle/lifecycle_publisher.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
-
+#include <tf2/LinearMath/Quaternion.h>
 
 #define N_JNT   12
 #define N_JNT_FOR_LEG 3
@@ -84,6 +84,9 @@ namespace solo12_interface
             double command_[N_JNT][N_INT];
             imu_data_t IMU_State_;
             double IMU_state_arr_ [3][IMU_NUM_STT_];
+            double IMU_lin_acc_[3];
+            double IMU_ang_vel_[3];
+            double IMU_ori_[4];
 
             int jnt_motor_[N_JNT];
 
@@ -94,6 +97,7 @@ namespace solo12_interface
             std::string joint_name_[N_JNT];
 
             int cont_;
+            tf2::Quaternion orient_;
 
             std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64MultiArray>> publisher_;
             std::chrono::time_point<std::chrono::system_clock> start_t_;

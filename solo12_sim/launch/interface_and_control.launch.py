@@ -26,6 +26,14 @@ def generate_launch_description():
         output='screen',
     )
 
+    imu_sensor_broadcaster = Node(
+        package = 'controller_manager',
+        executable = 'spawner',
+        arguments = ['imu_sensor_broadcaster', '--controller-manager', '/controller_manager'],
+        emulate_tty=True,
+        output='screen',
+    )
+
     return LaunchDescription([
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
@@ -36,4 +44,5 @@ def generate_launch_description():
         pd_spawner,
         
         joint_state_broadcast_spawner,
+        imu_sensor_broadcaster
     ])

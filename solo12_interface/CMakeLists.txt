@@ -12,7 +12,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(master_board_sdk REQUIRED)
-
+find_package(tf2 REQUIRED)
 #compile 
 add_library(
   ${PROJECT_NAME}
@@ -33,6 +33,7 @@ ament_target_dependencies(
   rclcpp
   rclcpp_lifecycle
   master_board_sdk
+  tf2
 )
 
 pluginlib_export_plugin_description_file(hardware_interface solo12_interface.xml)
@@ -77,6 +78,7 @@ ament_export_dependencies(
   rclcpp
   rclcpp_lifecycle
   master_board_sdk
+  tf2
 )
 
 ament_package()

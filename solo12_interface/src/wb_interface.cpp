@@ -1,5 +1,6 @@
 #include "solo12_interface/wb_interface.hpp"
 #include "pluginlib/class_list_macros.hpp"
+#include "../include/solo12_interface/wb_interface.hpp"
 
 #define CONNECTION_MODE "enp2s0"
 #define ERROR_MAX 20
@@ -180,7 +181,7 @@ namespace solo12_interface
             );
             return CallbackReturn::ERROR;       
         }
-
+  std::cerr<<" the KP is "<<kp_<< " and the KD is "<<kv_<<std::endl;
          //Command Type check
         auto it_1 = info_.hardware_parameters.find(COMMAND_TYPE_PARAM);
         if(it_1 ==info_.hardware_parameters.end())
@@ -296,6 +297,7 @@ namespace solo12_interface
             }
                 
             //}
+          
             if(!master_board_interface_.motors[jnt_motor_[i]].IsEnabled())
             {
                 master_board_interface_.motors[jnt_motor_[i]].SetCurrentReference(0);
@@ -418,21 +420,19 @@ namespace solo12_interface
          );
         std::string imu_name;
         
-        for(int i = 0; i < 3; i++)
-        {
-            
-            for(int j = 0; j < IMU_NUM_STT_;j++)
-            {
-                imu_name = IMU_measures_[j] + "/" + Axis_[i];
-                state_interface.emplace_back(
-                hardware_interface::StateInterface(
-                  imu_name,interface_IMU_type_[j],&IMU_state_arr_[i][j]
-                )
-            );
-            }
-            
-           
-        }
+        std::string name = "IMU";
+            state_interface.emplace_back(name ,"linear_acceleration.x", &IMU_lin_acc_[0]);
+            state_interface.emplace_back(name ,"linear_acceleration.y", &IMU_lin_acc_[1]);
+            state_interface.emplace_back(name ,"linear_acceleration.z", &IMU_lin_acc_[2]);
+
+            state_interface.emplace_back(name ,"angular_velocity.x", &IMU_ang_vel_[0]);
+            state_interface.emplace_back(name ,"angular_velocity.y", &IMU_ang_vel_[1]);
+            state_interface.emplace_back(name ,"angular_velocity.z", &IMU_ang_vel_[2]);
+
+            state_interface.emplace_back(name ,"orientation.x", &IMU_ori_[0]);
+            state_interface.emplace_back(name ,"orientation.y", &IMU_ori_[1]);
+            state_interface.emplace_back(name ,"orientation.z", &IMU_ori_[2]);
+            state_interface.emplace_back(name ,"orientation.w", &IMU_ori_[3]);
         return state_interface;
     }
 
@@ -491,12 +491,15 @@ namespace solo12_interface
 
         for(int i = 0; i < 3 ; i++)
         {
-            IMU_state_arr_[i][0] = imu_meas.accelerometer[i];
-            IMU_state_arr_[i][1] = imu_meas.gyroscope[i];
-            IMU_state_arr_[i][2] = imu_meas.linear_acceleration[i];
-            IMU_state_arr_[i][3] = imu_meas.attitude[i];
+            IMU_lin_acc_[i] = imu_meas.accelerometer[i];
+            IMU_ang_vel_[i] = imu_meas.gyroscope[i];
+            
         }
-        
+        orient_.setRPY( imu_meas.attitude[0], imu_meas.attitude[1], imu_meas.attitude[2] );
+        IMU_ori_[0]=orient_.getX(); 
+        IMU_ori_[0]=orient_.getY(); 
+        IMU_ori_[0]=orient_.getZ(); 
+        IMU_ori_[0]=orient_.getW(); 
         // for(uint i=0; i<N_JNT; i++)
         // {
         //     state_[i][0] = master_board_interface_.motors[jnt_motor_[i]].GetPosition()/ (TRASMISSION_RATEO);

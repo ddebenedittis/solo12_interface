@@ -6,6 +6,13 @@ controller_manager:
       type: joint_state_broadcaster/JointStateBroadcaster
     PD_control:
       type: rbt_pd_cnt/Real_PD_Cnt
+
+    imu_sensor_broadcaster:
+      type: imu_sensor_broadcaster/IMUSensorBroadcaster
+imu_sensor_broadcaster:
+  ros__parameters:
+    frame_id: "imu"
+    sensor_name: "IMU"
 PD_control:
     ros__parameters:
       joint:
