@@ -24,8 +24,8 @@
 #define JNT_MOTOR_LH_HFE 11 // 7 -- 9
 #define JNT_MOTOR_LH_KFE 9 // 8 -- 8
 #define JNT_MOTOR_RH_HAA 6 // 6 -- 6
-#define JNT_MOTOR_RH_HFE 10 // 10 -- 11
-#define JNT_MOTOR_RH_KFE 8 // 11 -- 10
+#define JNT_MOTOR_RH_HFE 8 // 10 -- 11
+#define JNT_MOTOR_RH_KFE 10 // 11 -- 10
 
 #define TRASMISSION_RATEO  9
 #define EFFORT_CURR_GAIN 0.025
