@@ -497,9 +497,9 @@ namespace solo12_interface
         }
         orient_.setRPY( imu_meas.attitude[0], imu_meas.attitude[1], imu_meas.attitude[2] );
         IMU_ori_[0]=orient_.getX(); 
-        IMU_ori_[0]=orient_.getY(); 
-        IMU_ori_[0]=orient_.getZ(); 
-        IMU_ori_[0]=orient_.getW(); 
+        IMU_ori_[1]=orient_.getY();
+        IMU_ori_[2]=orient_.getZ();
+        IMU_ori_[3]=orient_.getW();
         // for(uint i=0; i<N_JNT; i++)
         // {
         //     state_[i][0] = master_board_interface_.motors[jnt_motor_[i]].GetPosition()/ (TRASMISSION_RATEO);
